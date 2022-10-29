@@ -1,6 +1,7 @@
+
 class User:
-    def __init__(self,name,password):
-        self.name = name
+    def __init__(self,username,password):
+        self.username = username
         self.password = password
 
 class Bus:
@@ -85,12 +86,109 @@ class BusCounter(GreenLine):
                         a += 1
                     print()
 
+    def get_User(self):
+        return self.user_lst
+
+    def create_account(self):
+        name = input('Enter your name: ')
+        flag = 0
+
+        for user in self.get_User():
+            if user.username == name:
+                print('username already exist')
+                flag = 1
+                break
+        if flag == 0:
+            password = input("Enter your password: ")
+            self.new_user = User(name,password)
+            self.user_lst.append(vars(self.new_user))
+            print('account created successfully')
+
+    def available_bus(self):
+        if len(self.total_bus_lst) == 0:
+            print('no bus available')
+        else:
+            for bus in self.total_bus_lst:
+                print('*'*50)
+                print(f"{' '*10} {'#'*10} Bus Info {'#'*10}")
+                print(f"Bus No: {bus['coach']} \t\t Driver: {bus['driver']}")
+                print(f"Arrival: {bus['arrival']} \t\t Departure: {bus['departure']}")
+                print(f"From: {bus['form_des']} \t\t To: {bus['to_des']}")
+                print()
+                a =1
+                for i in range(5):
+                    for j in range(2):
+                        print(f"{a}. {bus['seat'][a-1]}", end="\t")
+                        a += 1
+                    print("\t", end="")
+
+                    for j in range(2):
+                        print(f"{a}. {bus['seat'][a-1]}", end="\t")
+                        a += 1
+                    print()
+                
+
+while True:
+    company = GreenLine()
+    b = BusCounter()
+    print("1. Create an account\n2. login to your account \n3. EXIT\n")
+    user_input = int(input("Enter you choice : "))
+    if user_input == 3:
+        break
+    elif user_input == 1:
+        b.create_account()
+    elif user_input == 2:
+        name = input("Enter your username : ")
+        password = input("Enter your password : ")
+        flag = 0
+        isAdmin = False
+        if name == "admin" and password == "123":
+            isAdmin = True
+        if isAdmin == False:
+            for user in b.get_User():
+                if user['username'] == name and user['password'] == password:
+                    flag = 1
+                    break
+            if flag:
+                while True:
+                    print(f"\n{' '*10}Welcome to BUS TICKET BOOKING SYSTEM")
+                    print("1. Available Buses\n2. Show Bus Info\n3. Reservation\n4. EXIT")
+                    a = int(input("Enter Your Choice : "))
+                    if a == 4:
+                        break
+                    elif a == 1:
+                        b.available_bus()
+                    elif a == 2:
+                        b.showBusInfo()
+                    elif a == 3:
+                        b.reservation()
+            else:
+                print("No username found")
+        else:
+            while True:
+                print(f"\n {' '*10} HELLO ADMIN Welcome to BUS TICKET BOOKING SYSTEM\n")
+                print(
+                    "1. Install Bus\n2. Available Buses\n3. Show Bus Info\n4. EXIT")
+                a = int(input("Enter Your Choice : "))
+                if a == 4:
+                    break
+                elif a == 1:
+                    b.install()
+                elif a == 2:
+                    b.available_bus()
+                elif a == 3:
+                    b.showBusInfo()
 
 
 
-company = GreenLine()
-company.install()
+
+# company = GreenLine()
+# company.install()
 
 b = BusCounter()
-b.reservation()
-b.showBusInfo()
+# b.reservation()
+# b.showBusInfo()
+b.install()
+b.install()
+b.available_bus()
+b.create_account()
